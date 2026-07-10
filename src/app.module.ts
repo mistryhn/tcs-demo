@@ -5,10 +5,12 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerMiddleware } from './middleware/logger.middleware';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
     UsersModule,
+    ReportsModule,
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db.sqlite',

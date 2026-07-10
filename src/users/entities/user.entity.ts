@@ -1,5 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
-
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Report } from '../../reports/entities/report.entity';
 @Entity()
 export class User {
   @PrimaryColumn()
@@ -10,4 +10,7 @@ export class User {
 
   @Column()
   email: string;
+
+  @OneToMany(() => Report, (report) => report.user)
+  reports: Report[];
 }

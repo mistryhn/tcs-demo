@@ -18,11 +18,14 @@ export class UsersService {
   }
 
   findAll() {
-    return this.userRepo.find();
+    return this.userRepo.find({ relations: { reports: true } });
   }
 
   findOne(id: number) {
-    return this.userRepo.findOne({ where: { id } });
+    return this.userRepo.findOne({
+      where: { id },
+      relations: { reports: true },
+    });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
