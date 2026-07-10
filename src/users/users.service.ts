@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -32,5 +32,12 @@ export class UsersService {
 
   remove(id: number) {
     return this.userRepo.delete({ id });
+  }
+
+  async login(loginDto: LoginDto) {
+    const email = loginDto.email;
+    const user = await this.userRepo.findOne({ where: { email } });
+    if (!user) throw new NotFoundException();
+    return user;
   }
 }

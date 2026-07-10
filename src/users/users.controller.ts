@@ -7,14 +7,38 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Session,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Post('/login')
+  async login(
+    @Body() loginDto: LoginDto,
+    @Session() session: Record<string, any>,
+  ) {
+    const user = await this.usersService.login(loginDto);
+    session.userId = user?.id;
+    session.email = user?.email;
+    return { message: 'Login successful', user };
+  }
+
+  @Get('/profile')
+  async profile(@Session() session, @Req() req) {
+    return { session, cookie: req?.cookies };
+  }
+
+  @Post('/logout')
+  async logout(@Session() session) {
+    session.destroy(() => {});
+    return { message: 'Logout successful' };
+  }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
